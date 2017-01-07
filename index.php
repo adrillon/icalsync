@@ -1,5 +1,20 @@
 <?php
 
+function save_to_ini($username, $calendars) {
+    $inilines = array();
+    foreach ($calendars as $cal) {
+        array_push($inilines, '[' . $cal['name'] . ']');
+        foreach ($cal as $key => $val) {
+            array_push($inilines, $key . '="' . $val . '"');
+        }
+        array_push($inilines, '');
+    }
+
+    if (! file_put_contents('users/' . $username . '.ini', implode("\r\n", $inilines))) {
+        die('Unable to write calendar data. Check that the users directory is writable.');
+    }
+}
+
 // Load the configuration
 if (! is_file('config.ini')) {
     die('No configuration found.');
@@ -54,18 +69,23 @@ if (count($_POST) > 0) {
         $calendars[$calname]['name'] = $calname;
     }
 
-    $inilines = array();
-    foreach ($calendars as $cal) {
-        array_push($inilines, '[' . $cal['name'] . ']');
-        foreach ($cal as $key => $val) {
-            array_push($inilines, $key . '="' . $val . '"');
-        }
-        array_push($inilines, '');
+   save_to_ini($currentuser, $calendars); 
+   Header('Location: index.php?user=' . $currentuser);
+
+} else if (array_key_exists('delete', $_GET) && $_GET['delete'] == '1') {
+    if (! array_key_exists('user', $_GET)) {
+        die('THe user is mandatory.');
+    } else if ($_GET['user'] != $currentuser) {
+        die('Wrong user.');
+    } else if (! array_key_exists('cal', $_GET)) {
+        die('THe calendar name is mandatory.');
+    } else if (! array_key_exists($_GET['cal'], $calendars)) {
+        die('The calendar does not exist.');
     }
 
-    if (! file_put_contents('users/' . $currentuser . '.ini', implode("\r\n", $inilines))) {
-        die('Unable to write calendar data. Check that the users directory is writable.');
-    }
+    unset($calendars[$_GET['cal']]);
+    save_to_ini($currentuser, $calendars);
+    Header('Location: index.php?user=' . $currentuser);
 }
 ?>
 
@@ -110,7 +130,7 @@ if (count($_POST) > 0) {
                     <span class="td" ><input type="text" name="display_name" value="<?php echo $cal['display_name']; ?>" /></span>
                     <span class="td" ><a href="<?php echo str_replace('%c', $cal['name'], $davurl); ?>" title="<?php echo $lang['local_url']; ?>" ><?php echo $lang['local_url']; ?></a></span>
                     <span class="td" ><input type="text" name="url" value="<?php echo $cal['url']; ?>" /></span>
-                    <span class="td" ><input type="submit" value="<?php echo $lang['save']; ?>" /></a></span>
+                    <span class="td" ><input type="submit" value="<?php echo $lang['save']; ?>" /> - <a href="?user=<?php echo $currentuser; ?>&delete=1&cal=<?php echo $cal['name']; ?>" ><?php echo $lang['delete']; ?></a></span>
                 </form>
             <?php
             }
