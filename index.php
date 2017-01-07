@@ -28,10 +28,18 @@ if (! is_file($langfile)) {
 }
 require_once($langfile);
 
-// Load the list of users
+// Create a new user if needed
 if (! is_dir('users')) {
     mkdir('users');
 }
+if (array_key_exists('newuser', $_GET)) {
+    $currentuser = $_GET['newuser'];
+    if (! is_file('users/' . $currentuser . '.ini')) {
+        file_put_contents('users/' . $currentuser . '.ini', '');
+    }
+    Header('Location: ?user=' . $currentuser);
+}
+// Load the list of users
 $inifiles = scandir('users');
 $users = array();
 foreach ($inifiles as $ini) {
@@ -39,23 +47,27 @@ foreach ($inifiles as $ini) {
         array_push($users, pathinfo('users/' . $ini, PATHINFO_FILENAME));
     }
 }
-if (count($users) == 0) {
-    die('No users found.');
-}
 
 // Set the current user
-$currentuser = $users[0];
 if (isset($_GET['user']) && in_array($_GET['user'], $users)) {
     $currentuser = $_GET['user'];
+} else if (count($users) != 0) {
+    $currentuser = $users[0];
+} else {
+    $currentuser = null;
 }
 
 // Current user's calendars
-$calendars = parse_ini_file('users/' . $currentuser . '.ini', true);
-$davurl = str_replace('%u', $currentuser, $config['davurl']);
+if ($currentuser) {
+    $calendars = parse_ini_file('users/' . $currentuser . '.ini', true);
+    $davurl = str_replace('%u', $currentuser, $config['davurl']);
+}
 
 // Parse form data
 if (count($_POST) > 0) {
-    if (! array_key_exists('display_name', $_POST) || empty($_POST['display_name'])) {
+    if (! $currentuser) {
+        die('You must choose an username.');
+    } else if (! array_key_exists('display_name', $_POST) || empty($_POST['display_name'])) {
         die('The display name is mandatory.');
     } else if (! array_key_exists('url', $_POST) ||  empty($_POST['url'])) {
         die('The remote URL is mandatory.');
@@ -76,7 +88,7 @@ if (count($_POST) > 0) {
     if (! array_key_exists('user', $_GET)) {
         die('THe user is mandatory.');
     } else if ($_GET['user'] != $currentuser) {
-        die('Wrong user.');
+        die('Wrong username.');
     } else if (! array_key_exists('cal', $_GET)) {
         die('THe calendar name is mandatory.');
     } else if (! array_key_exists($_GET['cal'], $calendars)) {
@@ -101,6 +113,9 @@ if (count($_POST) > 0) {
 
         <form method="get" >
             <label for="user" > <?php echo $lang['userselect']; ?>:</label>
+            <?php
+            if ($currentuser) {
+            ?>
             <select name="user" id="user" >
                 <?php
                     foreach ($users as $user) {
@@ -110,9 +125,16 @@ if (count($_POST) > 0) {
                     }
                 ?>
             </select>
+            <?php
+            }
+            ?>
+            <input type="text" name="newuser" placeholder="<?php echo $lang['newuser']; ?>" />
             <input type="submit" value="<?php echo $lang['changeuser']; ?>" />
         </form>
 
+        <?php
+        if ($currentuser) {
+        ?>
         <div id="table" >
             <div class="tr" id="thead" >
                 <span class="td" ><?php echo $lang['color']; ?></span>
@@ -144,5 +166,8 @@ if (count($_POST) > 0) {
                 <span class="td" ><input type="submit" value="<?php echo $lang['save']; ?>" /></span>
             </form>
         </div>
+        <?php
+        }
+        ?>
     </body>
 </html>

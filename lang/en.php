@@ -10,4 +10,5 @@ $lang = array(
     'operations'=> 'Operations',
     'save' => 'Save',
     'delete' => 'Delete',
+    'newuser' => 'New user',
 );

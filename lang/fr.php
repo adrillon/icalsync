@@ -10,4 +10,5 @@ $lang = array(
     'operations'=> 'Operations',
     'save' => 'Enregistrer',
     'delete' => 'Supprimer',
+    'newuser' => 'Nouvel utilisateur',
 );
