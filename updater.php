@@ -25,6 +25,11 @@ while (true) {
         }
 
         $username = pathinfo('users/' . $ini, PATHINFO_FILENAME);
+        $userpath = $davpath . '/' . $username;
+
+        if (! is_dir($userpath)) {
+            mkdir($userpath);
+        }
 
         $calendars = parse_ini_file('users/' . $ini, true);
 
@@ -37,8 +42,8 @@ while (true) {
 
             $caldata = file_get_contents($cal['url']);
 
-            file_put_contents($davpath . '/' . $username . '/' . $cal['name'] . '.props', json_encode($props));
-            file_put_contents($davpath . '/' . $username. '/' . $cal['name'], $caldata);
+            file_put_contents($userpath . '/' . $cal['name'] . '.props', json_encode($props));
+            file_put_contents($userpath . '/' . $cal['name'], $caldata);
         }
     }
 
