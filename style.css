@@ -4,6 +4,11 @@ body {
     margin: 1em;
 }
 
+#header div {
+    float: right;
+    width: auto;
+}
+
 #userform {
     margin-top: 3em;
     margin-bottom: 3em;

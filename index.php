@@ -114,7 +114,12 @@ if (count($_POST) > 0) {
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <h1><?php echo $lang['title']; ?></h1>
+        <div id="header" >
+            <div>
+                <a href="updater.php?oneshot=1" ><?php echo $lang['refresh']; ?></a>
+            </div>
+            <h1><?php echo $lang['title']; ?></h1>
+        </div>
 
         <?php if (array_key_exists('auth', $config) && $config['auth'] != 'none') { ?>
         <form method="get" id="userform" >

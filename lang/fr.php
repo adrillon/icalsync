@@ -11,4 +11,5 @@ $lang = array(
     'save' => 'Enregistrer',
     'delete' => 'Supprimer',
     'newuser' => 'Nouvel utilisateur',
+    'refresh' => 'M.À.J les calendriers',
 );

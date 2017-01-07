@@ -1,24 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-if (! is_file('config.ini')) {
-    die('No configuration found.');
-}
+function update() {
+    global $config;
 
-$config = parse_ini_file('config.ini');
-$davpath = $config['davpath'];
-
-if (! is_dir('users')) {
-    die('Nothing to update.');
-}
-
-$sleeptime = 60;
-if (array_key_exists('sleep_time', $config)) {
-    $sleeptime = $config['sleep_time'];
-}
-
-while (true) {
     $inifiles = scandir('users');
+    $davpath = $config['davpath'];
     foreach ($inifiles as $ini) {
         if (pathinfo('users/' . $ini, PATHINFO_EXTENSION) != 'ini') {
             continue;
@@ -46,6 +33,30 @@ while (true) {
             file_put_contents($userpath . '/' . $cal['name'], $caldata);
         }
     }
+}
 
+if (! is_file('config.ini')) {
+    die('No configuration found.');
+}
+
+$config = parse_ini_file('config.ini');
+
+if (! is_dir('users')) {
+    die('Nothing to update.');
+}
+
+$sleeptime = 60;
+if (array_key_exists('sleep_time', $config)) {
+    $sleeptime = $config['sleep_time'];
+}
+
+if (isset($_GET['oneshot'])) {
+    update();
+    Header('Location: index.php');
+    die();
+}
+
+while (true) {
+    update();
     sleep($sleeptime);
 }

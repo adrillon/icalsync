@@ -11,4 +11,5 @@ $lang = array(
     'save' => 'Save',
     'delete' => 'Delete',
     'newuser' => 'New user',
+    'refresh' => 'Refresh calendars',
 );
