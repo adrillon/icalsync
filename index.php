@@ -28,33 +28,38 @@ if (! is_file($langfile)) {
 }
 require_once($langfile);
 
-// Create a new user if needed
-if (! is_dir('users')) {
-    mkdir('users');
-}
-if (array_key_exists('newuser', $_GET) && ! empty($_GET['newuser'])) {
-    $currentuser = $_GET['newuser'];
-    if (! is_file('users/' . $currentuser . '.ini')) {
-        file_put_contents('users/' . $currentuser . '.ini', ' ');
+// No authentication
+if (! array_key_exists('auth', $config) || $config['auth'] = 'none') {
+    // Create a new user if needed
+    if (! is_dir('users')) {
+        mkdir('users');
     }
-    Header('Location: ?user=' . $currentuser);
-}
-// Load the list of users
-$inifiles = scandir('users');
-$users = array();
-foreach ($inifiles as $ini) {
-    if (pathinfo('users/' . $ini, PATHINFO_EXTENSION) == 'ini') {
-        array_push($users, pathinfo('users/' . $ini, PATHINFO_FILENAME));
+    if (array_key_exists('newuser', $_GET) && ! empty($_GET['newuser'])) {
+        $currentuser = $_GET['newuser'];
+        if (! is_file('users/' . $currentuser . '.ini')) {
+            file_put_contents('users/' . $currentuser . '.ini', ' ');
+        }
+        Header('Location: ?user=' . $currentuser);
     }
-}
+    // Load the list of users
+    $inifiles = scandir('users');
+    $users = array();
+    foreach ($inifiles as $ini) {
+        if (pathinfo('users/' . $ini, PATHINFO_EXTENSION) == 'ini') {
+            array_push($users, pathinfo('users/' . $ini, PATHINFO_FILENAME));
+        }
+    }
 
-// Set the current user
-if (isset($_GET['user']) && in_array($_GET['user'], $users)) {
-    $currentuser = $_GET['user'];
-} else if (count($users) != 0) {
-    $currentuser = $users[0];
-} else {
-    $currentuser = null;
+    // Set the current user
+    if (isset($_GET['user']) && in_array($_GET['user'], $users)) {
+        $currentuser = $_GET['user'];
+    } else if (count($users) != 0) {
+        $currentuser = $users[0];
+    } else {
+        $currentuser = null;
+    }
+} else if ($config['auth'] == 'http') {
+    $currentuser = $_SERVER['PHP_AUTH_USER'];
 }
 
 // Current user's calendars
@@ -111,11 +116,10 @@ if (count($_POST) > 0) {
     <body>
         <h1><?php echo $lang['title']; ?></h1>
 
+        <?php if (array_key_exists('auth', $config) && $config['auth'] != 'none') { ?>
         <form method="get" id="userform" >
             <label for="user" > <?php echo $lang['userselect']; ?>:</label>
-            <?php
-            if ($currentuser) {
-            ?>
+            <?php if ($currentuser) { ?>
             <select name="user" id="user" >
                 <?php
                     foreach ($users as $user) {
@@ -125,20 +129,15 @@ if (count($_POST) > 0) {
                     }
                 ?>
             </select>
-            <?php
-            }
-            ?>
+            <?php } ?>
             <input type="text" name="newuser" placeholder="<?php echo $lang['newuser']; ?>" />
             <input type="submit" value="<?php echo $lang['changeuser']; ?>" />
         </form>
+        <?php } ?>
 
-        <?php
-        if ($currentuser) {
-        ?>
+        <?php if ($currentuser) { ?>
         <div id="table" >
-            <?php
-            foreach ($calendars as $cal) {
-            ?>
+            <?php foreach ($calendars as $cal) { ?>
                 <form class="tr" method="post" action="?user=<?php echo $currentuser; ?>&cal=<?php echo $cal['name']; ?>" >
                     <span class="td" ><input type="text" name="color" style="color: <?php echo $cal['color']; ?>" value="<?php echo $cal['color']; ?>" /></span>
                     <span class="td" ><input type="text" name="display_name" value="<?php echo $cal['display_name']; ?>" /></span>
@@ -146,9 +145,7 @@ if (count($_POST) > 0) {
                     <span class="td" ><a href="<?php echo str_replace('%c', $cal['name'], $davurl); ?>" title="<?php echo $lang['local_url']; ?>" ><?php echo $lang['local_url']; ?></a></span>
                     <span class="td" ><input type="submit" class="savebutton" value="<?php echo $lang['save']; ?>" /> - <a class="deletebutton" href="?user=<?php echo $currentuser; ?>&delete=1&cal=<?php echo $cal['name']; ?>" ><?php echo $lang['delete']; ?></a></span>
                 </form>
-            <?php
-            }
-            ?>
+            <?php } ?>
 
             <form class="tr" method="post" action="?user=<?php echo $currentuser; ?>" >
                 <span class="td" ><input type="text" name="color" value="" placeholder="#000000" /></span>

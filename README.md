@@ -15,6 +15,14 @@ Copy the `config.ini.sample` file as `config.ini` and edit the values:
  - `davurl`: public URL of your CalDAV server - %u and %c are replace by the username and calendar name respectively
  - `lang`: UI language (check the `lang` folder for available languages)
  - `sleep_time`: how long should the updater wait between each calendar update (in seconds)
+ - `auth`: authentication method
+
+### Authentication methods
+
+ - `none`: no authentication is required, users creation is available to everyone
+ - `http`: basic HTTP authentication (requires a properly configured `.htaccess` file for Apache)
+
+The HTTP method allows authentication against any method supported by Apache (LDAP,...). You can use this to have the same authentication support as your CalDAV server.
 
 ## Auto-update
 
