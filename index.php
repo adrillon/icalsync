@@ -32,10 +32,10 @@ require_once($langfile);
 if (! is_dir('users')) {
     mkdir('users');
 }
-if (array_key_exists('newuser', $_GET)) {
+if (array_key_exists('newuser', $_GET) && ! empty($_GET['newuser'])) {
     $currentuser = $_GET['newuser'];
     if (! is_file('users/' . $currentuser . '.ini')) {
-        file_put_contents('users/' . $currentuser . '.ini', '');
+        file_put_contents('users/' . $currentuser . '.ini', ' ');
     }
     Header('Location: ?user=' . $currentuser);
 }
