@@ -29,7 +29,7 @@ if (! is_file($langfile)) {
 require_once($langfile);
 
 // No authentication
-if (! array_key_exists('auth', $config) || $config['auth'] = 'none') {
+if (! array_key_exists('auth', $config) || $config['auth'] == 'none') {
     // Create a new user if needed
     if (! is_dir('users')) {
         mkdir('users');
@@ -121,7 +121,7 @@ if (count($_POST) > 0) {
             <h1><?php echo $lang['title']; ?></h1>
         </div>
 
-        <?php if (array_key_exists('auth', $config) && $config['auth'] != 'none') { ?>
+        <?php if (array_key_exists('auth', $config) && $config['auth'] == 'none') { ?>
         <form method="get" id="userform" >
             <label for="user" > <?php echo $lang['userselect']; ?>:</label>
             <?php if ($currentuser) { ?>
