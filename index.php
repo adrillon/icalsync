@@ -111,7 +111,7 @@ if (count($_POST) > 0) {
     <body>
         <h1><?php echo $lang['title']; ?></h1>
 
-        <form method="get" >
+        <form method="get" id="userform" >
             <label for="user" > <?php echo $lang['userselect']; ?>:</label>
             <?php
             if ($currentuser) {
@@ -136,23 +136,15 @@ if (count($_POST) > 0) {
         if ($currentuser) {
         ?>
         <div id="table" >
-            <div class="tr" id="thead" >
-                <span class="td" ><?php echo $lang['color']; ?></span>
-                <span class="td" ><?php echo $lang['displayname']; ?></span>
-                <span class="td" ><?php echo $lang['local_url']; ?></span>
-                <span class="td" ><?php echo $lang['remote_url']; ?></span>
-                <span class="td" ><?php echo $lang['operations']; ?></span>
-            </div>
-
             <?php
             foreach ($calendars as $cal) {
             ?>
                 <form class="tr" method="post" action="?user=<?php echo $currentuser; ?>&cal=<?php echo $cal['name']; ?>" >
-                    <span class="td" ><input type="text" name="color" value="<?php echo $cal['color']; ?>" /></span>
+                    <span class="td" ><input type="text" name="color" style="color: <?php echo $cal['color']; ?>" value="<?php echo $cal['color']; ?>" /></span>
                     <span class="td" ><input type="text" name="display_name" value="<?php echo $cal['display_name']; ?>" /></span>
+                    <span class="td td-remoteurl" ><input type="text" name="url" value="<?php echo $cal['url']; ?>" /></span>
                     <span class="td" ><a href="<?php echo str_replace('%c', $cal['name'], $davurl); ?>" title="<?php echo $lang['local_url']; ?>" ><?php echo $lang['local_url']; ?></a></span>
-                    <span class="td" ><input type="text" name="url" value="<?php echo $cal['url']; ?>" /></span>
-                    <span class="td" ><input type="submit" value="<?php echo $lang['save']; ?>" /> - <a href="?user=<?php echo $currentuser; ?>&delete=1&cal=<?php echo $cal['name']; ?>" ><?php echo $lang['delete']; ?></a></span>
+                    <span class="td" ><input type="submit" class="savebutton" value="<?php echo $lang['save']; ?>" /> - <a class="deletebutton" href="?user=<?php echo $currentuser; ?>&delete=1&cal=<?php echo $cal['name']; ?>" ><?php echo $lang['delete']; ?></a></span>
                 </form>
             <?php
             }
@@ -160,10 +152,10 @@ if (count($_POST) > 0) {
 
             <form class="tr" method="post" action="?user=<?php echo $currentuser; ?>" >
                 <span class="td" ><input type="text" name="color" value="" placeholder="#000000" /></span>
-                <span class="td" ><input type="text" name="display_name" value="" /></span>
+                <span class="td" ><input type="text" name="display_name" value="" placeholder="<?php echo $lang['displayname']; ?>" /></span>
+                <span class="td td-remoteurl" ><input type="text" name="url" value="" placeholder="http://..." /></span>
                 <span class="td" ></span>
-                <span class="td" ><input type="text" name="url" value="" placeholder="http://..." /></span>
-                <span class="td" ><input type="submit" value="<?php echo $lang['save']; ?>" /></span>
+                <span class="td" ><input type="submit" class="savebutton" value="<?php echo $lang['save']; ?>" /></span>
             </form>
         </div>
         <?php

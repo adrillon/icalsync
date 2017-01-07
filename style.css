@@ -1,15 +1,52 @@
-#table {
-    display: table;
+body {
+    font-family: sans-serif;
+    color: #3e3e3f;
+    margin: 1em;
 }
 
-.tr {
-    display: table-row;
-}
-
-.td {
-    display: table-cell;
+#userform {
+    margin-top: 3em;
+    margin-bottom: 3em;
+    text-align: center;
 }
 
 #thead {
     font-weight: bold;
+}
+
+.tr {
+    display: flex;
+}
+
+.td {
+    margin: 0.5em;
+}
+
+.td-remoteurl  {
+    flex-grow: 2;
+}
+
+.td-remoteurl input {
+    width: 100%;
+}
+
+.savebutton {
+    background-color: #a6ce39;
+    border: none;
+}
+
+.savebutton:hover {
+    background-color: #a0c525;
+}
+
+.deletebutton {
+    background-color: #e15f5d;
+    border: none;
+    text-decoration: none;
+    padding: 0.03em;
+    color: #3e3e3f;
+}
+
+.deletebutton:hover {
+    background-color: #db5856;
 }
