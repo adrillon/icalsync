@@ -27,7 +27,8 @@ function update() {
                 "D:displayname" => $cal['display_name'],
             );
 
-            $caldata = file_get_contents($cal['url']);
+            $opts = array('http' => array('header' => 'User-Agent: Mozilla/5.0'));
+            $caldata = file_get_contents($cal['url'], false, stream_context_create($opts));
 
             file_put_contents($userpath . '/' . $cal['name'] . '.props', json_encode($props));
             file_put_contents($userpath . '/' . $cal['name'], $caldata);
