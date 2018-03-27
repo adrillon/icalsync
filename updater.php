@@ -48,18 +48,8 @@ if (! is_dir('users')) {
     die('Nothing to update.');
 }
 
-$sleeptime = 60;
-if (array_key_exists('sleep_time', $config)) {
-    $sleeptime = $config['sleep_time'];
-}
+update();
 
 if (isset($_GET['oneshot'])) {
-    update();
     Header('Location: index.php');
-    die();
-}
-
-while (true) {
-    update();
-    sleep($sleeptime);
 }

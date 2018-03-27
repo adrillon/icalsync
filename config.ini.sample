@@ -1,5 +1,4 @@
 davpath="/var/lib/radicale/collections"
 davurl="https://dav.example.com/%u/%c/"
 lang="en"
-sleep_time=60
 auth="none"

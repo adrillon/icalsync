@@ -1,15 +1,9 @@
 [Unit]
-[Unit]
 Description=Synchronize external calendars with any CalDAV server
 After=network.target
 
 [Service]
+Type=oneshot
 User=www-data
 ExecStart=/var/www/html/webapps/icalsync/updater.php
-ExecStop=/usr/bin/pkill -p www-data php
 WorkingDirectory=/var/www/html/webapps/icalsync
-Restart=always
-RestartSec=30
-
-[Install]
-WantedBy=multi-user.target

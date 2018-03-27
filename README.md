@@ -14,7 +14,6 @@ Copy the `config.ini.sample` file as `config.ini` and edit the values:
  - `davpath`: path to the directory used by your CalDAV server (must be writable by icalsync)
  - `davurl`: public URL of your CalDAV server - %u and %c are replace by the username and calendar name respectively
  - `lang`: UI language (check the `lang` folder for available languages)
- - `sleep_time`: how long should the updater wait between each calendar update (in seconds)
  - `auth`: authentication method
 
 ### Authentication methods
@@ -26,4 +25,4 @@ The HTTP method allows authentication against any method supported by Apache (LD
 
 ## Auto-update
 
-If you use systemd, you can copy `icalsync.service` to `/etc/systemd/system` and enable the `icalsync` service to have your calendars update automatically. Don't forget to edit `icalsync.service` with the correct icalsync installation path.
+If you use systemd, you can user the provided units (`icalsync.service` and `icalsync.timer`) to automatically update the calendars. Don't forget to edit `icalsync.service` with the correct icalsync installation path.
