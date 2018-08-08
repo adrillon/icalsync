@@ -30,7 +30,7 @@ function update() {
             $opts = array('http' => array('header' => 'User-Agent: Mozilla/5.0'));
             $caldata = file_get_contents($cal['url'], false, stream_context_create($opts));
             $http_code = explode(' ', trim($http_response_header[0]))[1];
-            if ($http_code == "200") {
+            if ($http_code == "200" || $http_code == "302") {
                 file_put_contents($userpath . '/' . $cal['name'] . '.props', json_encode($props));
                 file_put_contents($userpath . '/' . $cal['name'], $caldata);
             }
